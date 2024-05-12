@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Affine Cipher</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .output {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Affine Cipher Encryption and Decryption</h2>
+        <label for="plaintext">Enter your text:</label>
+        <input type="text" id="plaintext" placeholder="Enter text to encrypt/decrypt">
+        <label for="a">Enter value for key A:</label>
+        <input type="number" id="a" value="11">
+        <label for="b">Enter value for key B:</label>
+        <input type="number" id="b" value="4">
+        <button onclick="encrypt()">Encrypt</button>
+        <button onclick="decrypt()">Decrypt</button>
+        <div class="output">
+            <p id="encryptedText"></p>
+            <p id="decryptedText"></p>
+        </div>
+    </div>
+
+    <script>
+        function encrypt() {
+            var plaintext = document.getElementById('plaintext').value.toUpperCase();
+            var a = parseInt(document.getElementById('a').value);
+            var b = parseInt(document.getElementById('b').value);
+            var encryptedText = encryptText(plaintext, a, b);
+            document.getElementById('encryptedText').textContent = "Encrypted Text: " + encryptedText;
+        }
+
+        function decrypt() {
+            var encryptedText = document.getElementById('plaintext').value.toUpperCase();
+            var a = parseInt(document.getElementById('a').value);
+            var b = parseInt(document.getElementById('b').value);
+            var decryptedText = decryptText(encryptedText, a, b);
+            document.getElementById('decryptedText').textContent = "Decrypted Text: " + decryptedText;
+        }
+
+        function encryptText(plainText, a, b) {
+            var encryptedText = "";
+            for (var i = 0; i < plainText.length; i++) {
+                var char = plainText[i];
+                var charNum = char.charCodeAt(0);
+                if (char === " ") {
+                    encryptedText += " ";
+                } else {
+                    encryptedText += String.fromCharCode(((a * (charNum - 65) + b) % 26) + 65);
+                }
+            }
+            return encryptedText;
+        }
+
+        function decryptText(encryptedText, a, b) {
+            var decryptedText = "";
+            var modInverseA = 0;
+            for (var i = 0; i < 26; i++) {
+                if ((a * i) % 26 === 1) {
+                    modInverseA = i;
+                    break;
+                }
+            }
+            for (var i = 0; i < encryptedText.length; i++) {
+                var char = encryptedText[i];
+                var charNum = char.charCodeAt(0);
+                if (char === " ") {
+                    decryptedText += " ";
+                } else {
+                    decryptedText += String.fromCharCode((modInverseA * (charNum - 65 - b + 26)) % 26 + 65);
+                }
+            }
+            return decryptedText;
+        }
+    </script>
+</body>
+
+</html>
